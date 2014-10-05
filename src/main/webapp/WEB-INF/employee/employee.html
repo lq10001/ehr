@@ -1,0 +1,619 @@
+
+
+
+<%
+var selected1 = "";
+%>
+<div class="pageContent">
+<form method="post" action="${ctxPath}/employee/save" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);">
+
+<input type="hidden" id="id" name="id" value="${employee.id!}">
+
+<div class="pageFormContent" layoutH="56">
+<fieldset>
+<legend>员工基础信息</legend>
+
+<dl>
+    <dt>编号</dt>
+    <dd>
+        <input name="no"  type="text" size="30" value="${employee.no!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>中文名</dt>
+    <dd>
+        <input name="cnname"  type="text" size="30" value="${employee.cnname!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>姓名</dt>
+    <dd>
+        <input name="name"  type="text" size="30" value="${employee.name!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>性别</dt>
+    <dd>
+        <select name="genderid" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_gender!)
+            {
+            if(isEmpty(employee.genderid) || obj.id != employee.genderid)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>名族</dt>
+    <dd>
+        <input name="nation"  type="text" size="30" value="${employee.nation!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>籍贯</dt>
+    <dd>
+        <input name="nativeplace"  type="text" size="30" value="${employee.nativeplace!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>政治面貌</dt>
+    <dd>
+        <select name="partyid" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_party!)
+            {
+            if(isEmpty(employee.partyid) || obj.id != employee.partyid)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>兴趣爱好</dt>
+    <dd>
+        <input name="hobby"  type="text" size="30" value="${employee.hobby!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>健康状况</dt>
+    <dd>
+        <input name="health"  type="text" size="30" value="${employee.health!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>身高(cm)</dt>
+    <dd>
+        <input name="height"  type="text" size="30" value="${employee.height!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>体重(kg)</dt>
+    <dd>
+        <input name="weight"  type="text" size="30" value="${employee.weight!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>血型</dt>
+    <dd>
+        <select name="bloodid" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_blood!)
+            {
+            if(isEmpty(employee.bloodid) || obj.id != employee.bloodid)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>婚姻状况</dt>
+    <dd>
+        <select name="marital" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_marital!)
+            {
+            if(isEmpty(employee.marital) || obj.id != employee.marital)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>生育状态</dt>
+    <dd>
+        <select name="procreateid" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_procreate!)
+            {
+            if(isEmpty(employee.procreateid) || obj.id != employee.procreateid)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>户口所在地</dt>
+    <dd>
+        <input name="native1"  type="text" size="30" value="${employee.native1!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>户籍类型</dt>
+    <dd>
+        <select name="nativetypeid" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_nativetype!)
+            {
+            if(isEmpty(employee.nativetypeid) || obj.id != employee.nativetypeid)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>证件类别</dt>
+    <dd>
+        <select name="ictypeid" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_ictype!)
+            {
+            if(isEmpty(employee.ictypeid) || obj.id != employee.ictypeid)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>证件号码</dt>
+    <dd>
+        <input name="icno"  type="text" size="30" value="${employee.icno!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>签发机关</dt>
+    <dd>
+        <input name="issue"  type="text" size="30" value="${employee.issue!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>有效期限</dt>
+    <dd>
+        <input type="text" name="usefullife" value="${employee.usefullife!}" class="date" size="30" /><a class="inputDateButton" href="javascript:;">选择</a>
+    </dd>
+</dl>
+
+<dl>
+    <dt>证件地址</dt>
+    <dd>
+        <input name="idaddress"  type="text" size="30" value="${employee.idaddress!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>现居住地址</dt>
+    <dd>
+        <input name="address"  type="text" size="30" value="${employee.address!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>联系电话</dt>
+    <dd>
+        <input name="phone"  type="text" size="30" value="${employee.phone!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>紧急联系人电话</dt>
+    <dd>
+        <input name="phone2"  type="text" size="30" value="${employee.phone2!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>紧急联系人</dt>
+    <dd>
+        <input name="linkman"  type="text" size="30" value="${employee.linkman!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>Email</dt>
+    <dd>
+        <input name="email"  type="text" size="30" value="${employee.email!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>Email(STM)</dt>
+    <dd>
+        <input name="emailwork"  type="text" size="30" value="${employee.emailwork!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>学历</dt>
+    <dd>
+        <select name="educationid" class="combox">
+            <%
+            selected1 = "";
+            for(obj in list_education!)
+            {
+            if(isEmpty(employee.educationid) || obj.id != employee.educationid)
+            {
+            selected="";
+            }else{
+            selected = "selected='selected'";
+            }
+            println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+            }
+            %>
+        </select>
+    </dd>
+</dl>
+
+
+<dl>
+    <dt>专业</dt>
+    <dd>
+        <input name="major"  type="text" size="30" value="${employee.major!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>毕业学校</dt>
+    <dd>
+        <input name="school"  type="text" size="30" value="${employee.school!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>毕业时间</dt>
+    <dd>
+        <input type="text" name="graduatetime" value="${employee.graduatetime!}" class="date" size="30" /><a class="inputDateButton" href="javascript:;">选择</a>
+    </dd>
+</dl>
+
+<dl>
+    <dt>起始工作时间</dt>
+    <dd>
+        <input type="text" name="startworkingdate" value="${employee.startworkingdate!}" class="date" size="30" /><a class="inputDateButton" href="javascript:;">选择</a>
+    </dd>
+</dl>
+
+<dl>
+    <dt>出生日期</dt>
+    <dd>
+        <input type="text" name="birthday" value="${employee.birthday!}" class="date" size="30" /><a class="inputDateButton" href="javascript:;">选择</a>
+    </dd>
+</dl>
+
+<dl>
+    <dt>年龄</dt>
+    <dd>
+        <input name="age"  type="text" size="30" value="${employee.age!}" alt=""/>
+    </dd>
+</dl>
+
+<dl>
+    <dt>国籍</dt>
+    <dd>
+        <input name="nationality"  type="text" size="30" value="${employee.nationality!}" alt=""/>
+    </dd>
+</dl>
+
+</fieldset>
+
+<fieldset>
+    <legend>银行卡信息</legend>
+
+
+    <dl>
+        <dt>招商银行卡号</dt>
+        <dd>
+            <input name="cmbno"  type="text" size="30" value="${employee.cmbno!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>公积金号</dt>
+        <dd>
+            <input name="housingno"  type="text" size="30" value="${employee.housingno!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>社保号</dt>
+        <dd>
+            <input name="socialno"  type="text" size="30" value="${employee.socialno!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>社保所在地</dt>
+        <dd>
+            <input name="socialaddress"  type="text" size="30" value="${employee.socialaddress!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>公积金所在地</dt>
+        <dd>
+            <input name="housingadress"  type="text" size="30" value="${employee.housingadress!}" alt=""/>
+        </dd>
+    </dl>
+</fieldset>
+<fieldset>
+    <legend>入职信息</legend>
+
+    <dl>
+        <dt>职称</dt>
+        <dd>
+            <input name="title"  type="text" size="30" value="${employee.title!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>工作类型</dt>
+        <dd>
+            <select name="worktypeid" class="combox">
+                <%
+                selected1 = "";
+                for(obj in list_worktype!)
+                {
+                if(isEmpty(employee.worktypeid) || obj.id != employee.worktypeid)
+                {
+                selected="";
+                }else{
+                selected = "selected='selected'";
+                }
+                println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+                }
+                %>
+            </select>
+        </dd>
+    </dl>
+
+
+    <dl>
+        <dt>入职时间</dt>
+        <dd>
+            <input type="text" name="boarddate" value="${employee.boarddate!}" class="date" size="30" /><a class="inputDateButton" href="javascript:;">选择</a>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>部门</dt>
+        <dd>
+            <select name="deptid" class="combox">
+                <%
+                selected1 = "";
+                for(obj in list_department!)
+                {
+                if(isEmpty(employee.deptid) || obj.id != employee.deptid)
+                {
+                selected="";
+                }else{
+                selected = "selected='selected'";
+                }
+                println("<option value='" + obj.id + "'"+selected+">"+obj.name+"</option>");
+                }
+                %>
+            </select>
+        </dd>
+    </dl>
+
+
+    <dl>
+        <dt>直线上级</dt>
+        <dd>
+            <input name="leader"  type="text" size="30" value="${employee.leader!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>职位</dt>
+        <dd>
+            <input name="position"  type="text" size="30" value="${employee.position!}" alt=""/>
+        </dd>
+    </dl>
+
+
+    <dl>
+        <dt>座位号</dt>
+        <dd>
+            <input name="seatno"  type="text" size="30" value="${employee.seatno!}" alt=""/>
+        </dd>
+    </dl>
+</fieldset>
+
+<fieldset>
+    <legend>家人信息</legend>
+    <dl>
+        <dt>家属姓名</dt>
+        <dd>
+            <input name="personname1"  type="text" size="30" value="${employee.personname1!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>家属关系</dt>
+        <dd>
+            <input name="personreleation1"  type="text" size="30" value="${employee.personreleation1!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>家属地址</dt>
+        <dd>
+            <input name="personaddress1"  type="text" size="30" value="${employee.personaddress1!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>家属姓名2</dt>
+        <dd>
+            <input name="personname2"  type="text" size="30" value="${employee.personname2!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>家属关系2</dt>
+        <dd>
+            <input name="personreleation2"  type="text" size="30" value="${employee.personreleation2!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>家属地址2</dt>
+        <dd>
+            <input name="personaddress2"  type="text" size="30" value="${employee.personaddress2!}" alt=""/>
+        </dd>
+    </dl>
+</fieldset>
+
+<fieldset>
+    <legend>工作经历</legend>
+
+
+    <dl >
+        <dt>工作时间</dt>
+        <dd class="dateRange">
+            <input type="text"  readonly="readonly"  name="workstartdate1" value="${employee.workstartdate1!}" class="date"/>
+            <span class="limit">-</span>
+            <input type="text"  readonly="readonly"  name="workenddate1" value="${employee.workenddate1!}" class="date"/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>公司名称</dt>
+        <dd>
+            <input name="corpname1"  type="text" size="30" value="${employee.corpname1!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>所在部门和职位</dt>
+        <dd>
+            <input name="deptname1"  type="text" size="30" value="${employee.deptname1!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl >
+        <dt>工作时间2</dt>
+        <dd class="dateRange">
+            <input type="text"  readonly="readonly"  name="workstartdate2" value="${employee.workstartdate2!}" class="date"/>
+            <span class="limit">-</span>
+            <input type="text"  readonly="readonly"  name="workenddate2" value="${employee.workenddate2!}" class="date"/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>公司名称2</dt>
+        <dd>
+            <input name="corpname2"  type="text" size="30" value="${employee.corpname2!}" alt=""/>
+        </dd>
+    </dl>
+
+    <dl>
+        <dt>所在部门和职位2</dt>
+        <dd>
+            <input name="deptname2"  type="text" size="30" value="${employee.deptname2!}" alt=""/>
+        </dd>
+    </dl>
+</fieldset>
+
+<dl>
+    <dt>备注</dt>
+    <dd>
+        <input name="memo"  type="text" size="30" value="${employee.memo!}" alt=""/>
+    </dd>
+</dl>
+
+</div>
+<div class="formBar">
+    <ul>
+        <li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+        <li>
+            <div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div>
+        </li>
+    </ul>
+</div>
+</form>
+</div>

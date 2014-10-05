@@ -1,0 +1,68 @@
+
+
+
+<%
+var selected1 = "";
+%>
+<div class="pageContent">
+  <form method="post" action="${ctxPath}/exitinfo/save" class="pageForm required-validate" onsubmit="return validateCallback(this, dialogAjaxDone);">
+
+    <input type="hidden" id="id" name="id" value="${exitinfo.id!}">
+
+		<div class="pageFormContent" layoutH="56">
+
+            <!--
+					<dl>
+		                <dt>员工ID</dt>
+		                <dd>
+		                <input name="employeeid"  type="text" size="30" value="${exitinfo.employeeid!}" alt=""/>
+		                </dd>
+		            </dl>
+		      -->
+	            
+					<dl>
+		                <dt>离职类型</dt>
+		                <dd>
+		                <input name="exitform"  type="text" size="30" value="${exitinfo.exitform!}" alt=""/>
+		                </dd>
+		            </dl>
+	            
+					<dl>
+		                <dt>最后工作日</dt>
+		                <dd>
+		                <input type="text" name="lastday" value="${exitinfo.lastday!}" class="date" size="30" /><a class="inputDateButton" href="javascript:;">选择</a>
+		                </dd>
+		            </dl>
+		        
+					<dl>
+		                <dt>离职原因</dt>
+		                <dd>
+		                <input name="reason"  type="text" size="30" value="${exitinfo.reason!}" alt=""/>
+		                </dd>
+		            </dl>
+	            
+					<dl>
+		                <dt>离职原因细分</dt>
+		                <dd>
+		                <input name="reason2"  type="text" size="30" value="${exitinfo.reason2!}" alt=""/>
+		                </dd>
+		            </dl>
+	            
+					<dl>
+		                <dt>备注</dt>
+		                <dd>
+		                <input name="memo"  type="text" size="30" value="${exitinfo.memo!}" alt=""/>
+		                </dd>
+		            </dl>
+	            			
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li>
+					<div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div>
+				</li>
+			</ul>
+		</div>
+	</form>
+</div>
