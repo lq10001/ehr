@@ -1,6 +1,13 @@
+.DS_Store
 *.class
 
 # Package Files #
 *.jar
 *.war
 *.ear
+
+*.DS_Store
+*/out/*
+*/classes/*
+*/target/*
+*target/*
