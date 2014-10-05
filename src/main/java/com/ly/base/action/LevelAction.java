@@ -1,5 +1,6 @@
 package com.ly.base.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
@@ -13,6 +14,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +35,41 @@ public class LevelAction {
 
     @At("/")
     @Ok("beetl:/WEB-INF/base/level_list.html")
-    public void index(@Param("..")Page p,
-                      @Param("..")Level level,
-                      HttpServletRequest request){
-        Cnd c = new ParseObj(level).getCnd();
-        List<Level> list_m = levelService.query(c, p);
-        p.setRecordCount(levelService.count(c));
-
-        request.setAttribute("list_obj", list_m);
-        request.setAttribute("page", p);
-        request.setAttribute("level", level);
-    }
-
-    @At
-    @Ok("beetl:/WEB-INF/base/level.html")
-    public void edit(@Param("id")Long id,
-                      HttpServletRequest request){
-        if(id == null || id == 0){
-            request.setAttribute("level", null);
-        }else{
-            request.setAttribute("level", levelService.fetch(id));
-        }
+    public void index(){
     }
 
     @At
     @Ok("json")
-    public Map<String,String> save( @Param("..")Level level){
+    public Map levelList(HttpServletRequest request,
+                         @Param("..")Page p,
+                         @Param("..")Level level){
+        List<Level> list_obj = levelService.query(null, p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",levelService.count());
+        map.put("data",list_obj);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public void save(@Param("data") String data ){
         Object rtnObject;
-        if (level.getId() == null || level.getId() == 0) {
-            rtnObject = levelService.dao().insert(level);
-        }else{
-            rtnObject = levelService.dao().updateIgnoreNull(level);
-        }
-        return Dwz.rtnMap((rtnObject == null) ? false : true, "level", "closeCurrent");
-    }
+        System.out.println(data);
+        String s1 = data.replace("_state","webstate");
+        List<Level> levelList = JSON.parseArray(s1, Level.class);
 
-    @At
-    @Ok("json")
-    public Map<String,String> del(@Param("id")Long id)
-    {
-        int num =  levelService.delete(id);
-        return Dwz.rtnMap((num > 0) ? true : false , "level", "");
+        for(Level level : levelList)
+        {
+            if (level.getWebstate().equals("added")){
+                level.setId(null);
+                levelService.dao().insert(level);
+            }else if(level.getWebstate().equals("modified")) {
+                levelService.dao().updateIgnoreNull(level);
+            }else{
+                levelService.delete(level.getId());
+            }
+        }
     }
 
 }

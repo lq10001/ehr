@@ -1,5 +1,6 @@
 package com.ly.base.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
@@ -13,6 +14,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +35,41 @@ public class JobAction {
 
     @At("/")
     @Ok("beetl:/WEB-INF/base/job_list.html")
-    public void index(@Param("..")Page p,
-                      @Param("..")Job job,
-                      HttpServletRequest request){
-        Cnd c = new ParseObj(job).getCnd();
-        List<Job> list_m = jobService.query(c, p);
-        p.setRecordCount(jobService.count(c));
-
-        request.setAttribute("list_obj", list_m);
-        request.setAttribute("page", p);
-        request.setAttribute("job", job);
-    }
-
-    @At
-    @Ok("beetl:/WEB-INF/base/job.html")
-    public void edit(@Param("id")Long id,
-                      HttpServletRequest request){
-        if(id == null || id == 0){
-            request.setAttribute("job", null);
-        }else{
-            request.setAttribute("job", jobService.fetch(id));
-        }
+    public void index(){
     }
 
     @At
     @Ok("json")
-    public Map<String,String> save( @Param("..")Job job){
+    public Map jobList(HttpServletRequest request,
+                         @Param("..")Page p,
+                         @Param("..")Job job){
+        List<Job> list_obj = jobService.query(null, p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",jobService.count());
+        map.put("data",list_obj);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public void save(@Param("data") String data ){
         Object rtnObject;
-        if (job.getId() == null || job.getId() == 0) {
-            rtnObject = jobService.dao().insert(job);
-        }else{
-            rtnObject = jobService.dao().updateIgnoreNull(job);
-        }
-        return Dwz.rtnMap((rtnObject == null) ? false : true, "job", "closeCurrent");
-    }
+        System.out.println(data);
+        String s1 = data.replace("_state","webstate");
+        List<Job> jobList = JSON.parseArray(s1, Job.class);
 
-    @At
-    @Ok("json")
-    public Map<String,String> del(@Param("id")Long id)
-    {
-        int num =  jobService.delete(id);
-        return Dwz.rtnMap((num > 0) ? true : false , "job", "");
+        for(Job job : jobList)
+        {
+            if (job.getWebstate().equals("added")){
+                job.setId(null);
+                jobService.dao().insert(job);
+            }else if(job.getWebstate().equals("modified")) {
+                jobService.dao().updateIgnoreNull(job);
+            }else{
+                jobService.delete(job.getId());
+            }
+        }
     }
 
 }

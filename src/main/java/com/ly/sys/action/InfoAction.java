@@ -21,7 +21,7 @@ import com.ly.sys.service.InfoService;
 
 
 @IocBean
-@At("/info")
+@At("/sysinfo")
 @Fail("json")
 @Filters(@By(type=CheckSession.class, args={"username", "/WEB-INF/login.html"}))
 public class InfoAction {

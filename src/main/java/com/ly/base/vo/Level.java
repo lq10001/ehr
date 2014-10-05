@@ -9,6 +9,16 @@ import org.nutz.dao.entity.annotation.View;
 @Table("level")
 public class Level{
 
+	private String webstate;
+
+    public String getWebstate() {
+        return webstate;
+    }
+
+    public void setWebstate(String webstate) {
+        this.webstate = webstate;
+    }
+
 	@Id
 	@Column
 	private Long id;
@@ -43,4 +53,5 @@ public class Level{
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+
 }

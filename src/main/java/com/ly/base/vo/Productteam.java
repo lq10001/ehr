@@ -9,6 +9,16 @@ import org.nutz.dao.entity.annotation.View;
 @Table("productteam")
 public class Productteam{
 
+	private String webstate;
+
+    public String getWebstate() {
+        return webstate;
+    }
+
+    public void setWebstate(String webstate) {
+        this.webstate = webstate;
+    }
+
 	@Id
 	@Column
 	private Long id;
@@ -43,4 +53,5 @@ public class Productteam{
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+
 }

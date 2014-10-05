@@ -1,5 +1,6 @@
 package com.ly.base.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
@@ -13,6 +14,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +35,41 @@ public class PartyAction {
 
     @At("/")
     @Ok("beetl:/WEB-INF/base/party_list.html")
-    public void index(@Param("..")Page p,
-                      @Param("..")Party party,
-                      HttpServletRequest request){
-        Cnd c = new ParseObj(party).getCnd();
-        List<Party> list_m = partyService.query(c, p);
-        p.setRecordCount(partyService.count(c));
-
-        request.setAttribute("list_obj", list_m);
-        request.setAttribute("page", p);
-        request.setAttribute("party", party);
-    }
-
-    @At
-    @Ok("beetl:/WEB-INF/base/party.html")
-    public void edit(@Param("id")Long id,
-                      HttpServletRequest request){
-        if(id == null || id == 0){
-            request.setAttribute("party", null);
-        }else{
-            request.setAttribute("party", partyService.fetch(id));
-        }
+    public void index(){
     }
 
     @At
     @Ok("json")
-    public Map<String,String> save( @Param("..")Party party){
+    public Map partyList(HttpServletRequest request,
+                         @Param("..")Page p,
+                         @Param("..")Party party){
+        List<Party> list_obj = partyService.query(null, p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",partyService.count());
+        map.put("data",list_obj);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public void save(@Param("data") String data ){
         Object rtnObject;
-        if (party.getId() == null || party.getId() == 0) {
-            rtnObject = partyService.dao().insert(party);
-        }else{
-            rtnObject = partyService.dao().updateIgnoreNull(party);
-        }
-        return Dwz.rtnMap((rtnObject == null) ? false : true, "party", "closeCurrent");
-    }
+        System.out.println(data);
+        String s1 = data.replace("_state","webstate");
+        List<Party> partyList = JSON.parseArray(s1, Party.class);
 
-    @At
-    @Ok("json")
-    public Map<String,String> del(@Param("id")Long id)
-    {
-        int num =  partyService.delete(id);
-        return Dwz.rtnMap((num > 0) ? true : false , "party", "");
+        for(Party party : partyList)
+        {
+            if (party.getWebstate().equals("added")){
+                party.setId(null);
+                partyService.dao().insert(party);
+            }else if(party.getWebstate().equals("modified")) {
+                partyService.dao().updateIgnoreNull(party);
+            }else{
+                partyService.delete(party.getId());
+            }
+        }
     }
 
 }

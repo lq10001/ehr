@@ -61,7 +61,7 @@ public class LoginAction {
         session.setAttribute("userid",user.getId());
         session.setAttribute("username", username);
 
-        request.setAttribute("page","sys/index.html");
+        request.setAttribute("page","sys/index2.html");
 
         request.setAttribute("pmenus",menuService.query(Cnd.wrap("pname = '0' and state = 1 order by ordernum"),null));
         request.setAttribute("menus",menuService.query(Cnd.wrap("pname != '0' and state = 1 order by ordernum"),null));

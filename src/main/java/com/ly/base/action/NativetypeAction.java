@@ -1,5 +1,6 @@
 package com.ly.base.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
@@ -13,6 +14,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +35,41 @@ public class NativetypeAction {
 
     @At("/")
     @Ok("beetl:/WEB-INF/base/nativetype_list.html")
-    public void index(@Param("..")Page p,
-                      @Param("..")Nativetype nativetype,
-                      HttpServletRequest request){
-        Cnd c = new ParseObj(nativetype).getCnd();
-        List<Nativetype> list_m = nativetypeService.query(c, p);
-        p.setRecordCount(nativetypeService.count(c));
-
-        request.setAttribute("list_obj", list_m);
-        request.setAttribute("page", p);
-        request.setAttribute("nativetype", nativetype);
-    }
-
-    @At
-    @Ok("beetl:/WEB-INF/base/nativetype.html")
-    public void edit(@Param("id")Long id,
-                      HttpServletRequest request){
-        if(id == null || id == 0){
-            request.setAttribute("nativetype", null);
-        }else{
-            request.setAttribute("nativetype", nativetypeService.fetch(id));
-        }
+    public void index(){
     }
 
     @At
     @Ok("json")
-    public Map<String,String> save( @Param("..")Nativetype nativetype){
+    public Map nativetypeList(HttpServletRequest request,
+                         @Param("..")Page p,
+                         @Param("..")Nativetype nativetype){
+        List<Nativetype> list_obj = nativetypeService.query(null, p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",nativetypeService.count());
+        map.put("data",list_obj);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public void save(@Param("data") String data ){
         Object rtnObject;
-        if (nativetype.getId() == null || nativetype.getId() == 0) {
-            rtnObject = nativetypeService.dao().insert(nativetype);
-        }else{
-            rtnObject = nativetypeService.dao().updateIgnoreNull(nativetype);
-        }
-        return Dwz.rtnMap((rtnObject == null) ? false : true, "nativetype", "closeCurrent");
-    }
+        System.out.println(data);
+        String s1 = data.replace("_state","webstate");
+        List<Nativetype> nativetypeList = JSON.parseArray(s1, Nativetype.class);
 
-    @At
-    @Ok("json")
-    public Map<String,String> del(@Param("id")Long id)
-    {
-        int num =  nativetypeService.delete(id);
-        return Dwz.rtnMap((num > 0) ? true : false , "nativetype", "");
+        for(Nativetype nativetype : nativetypeList)
+        {
+            if (nativetype.getWebstate().equals("added")){
+                nativetype.setId(null);
+                nativetypeService.dao().insert(nativetype);
+            }else if(nativetype.getWebstate().equals("modified")) {
+                nativetypeService.dao().updateIgnoreNull(nativetype);
+            }else{
+                nativetypeService.delete(nativetype.getId());
+            }
+        }
     }
 
 }

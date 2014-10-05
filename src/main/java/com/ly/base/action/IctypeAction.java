@@ -1,5 +1,6 @@
 package com.ly.base.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
@@ -13,6 +14,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +35,41 @@ public class IctypeAction {
 
     @At("/")
     @Ok("beetl:/WEB-INF/base/ictype_list.html")
-    public void index(@Param("..")Page p,
-                      @Param("..")Ictype ictype,
-                      HttpServletRequest request){
-        Cnd c = new ParseObj(ictype).getCnd();
-        List<Ictype> list_m = ictypeService.query(c, p);
-        p.setRecordCount(ictypeService.count(c));
-
-        request.setAttribute("list_obj", list_m);
-        request.setAttribute("page", p);
-        request.setAttribute("ictype", ictype);
-    }
-
-    @At
-    @Ok("beetl:/WEB-INF/base/ictype.html")
-    public void edit(@Param("id")Long id,
-                      HttpServletRequest request){
-        if(id == null || id == 0){
-            request.setAttribute("ictype", null);
-        }else{
-            request.setAttribute("ictype", ictypeService.fetch(id));
-        }
+    public void index(){
     }
 
     @At
     @Ok("json")
-    public Map<String,String> save( @Param("..")Ictype ictype){
+    public Map ictypeList(HttpServletRequest request,
+                         @Param("..")Page p,
+                         @Param("..")Ictype ictype){
+        List<Ictype> list_obj = ictypeService.query(null, p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",ictypeService.count());
+        map.put("data",list_obj);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public void save(@Param("data") String data ){
         Object rtnObject;
-        if (ictype.getId() == null || ictype.getId() == 0) {
-            rtnObject = ictypeService.dao().insert(ictype);
-        }else{
-            rtnObject = ictypeService.dao().updateIgnoreNull(ictype);
-        }
-        return Dwz.rtnMap((rtnObject == null) ? false : true, "ictype", "closeCurrent");
-    }
+        System.out.println(data);
+        String s1 = data.replace("_state","webstate");
+        List<Ictype> ictypeList = JSON.parseArray(s1, Ictype.class);
 
-    @At
-    @Ok("json")
-    public Map<String,String> del(@Param("id")Long id)
-    {
-        int num =  ictypeService.delete(id);
-        return Dwz.rtnMap((num > 0) ? true : false , "ictype", "");
+        for(Ictype ictype : ictypeList)
+        {
+            if (ictype.getWebstate().equals("added")){
+                ictype.setId(null);
+                ictypeService.dao().insert(ictype);
+            }else if(ictype.getWebstate().equals("modified")) {
+                ictypeService.dao().updateIgnoreNull(ictype);
+            }else{
+                ictypeService.delete(ictype.getId());
+            }
+        }
     }
 
 }

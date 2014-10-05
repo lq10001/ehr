@@ -1,10 +1,12 @@
 package com.ly.sys.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
 import com.ly.sys.service.MenuService;
 import com.ly.sys.vo.Menu;
+import com.ly.webvo.Tree;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.pager.Pager;
@@ -17,10 +19,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @IocBean
 @At("/menu")
@@ -41,6 +40,7 @@ public class MenuAction{
     public void index(@Param("..")Page p,
                       @Param("..")Menu menu,
                       HttpServletRequest request){
+
         Cnd c = new ParseObj(menu).getCnd();
         List<Menu> list_m = menuService.query(c.asc("ordernum"), p);
         p.setRecordCount(menuService.count(c));
@@ -48,6 +48,43 @@ public class MenuAction{
         request.setAttribute("list_obj", list_m);
         request.setAttribute("page", p);
         request.setAttribute("menu", menu);
+    }
+
+    @At
+    @Ok("json")
+    public Map menuList2(HttpServletRequest request,
+                                @Param("..")Page p,
+                                @Param("..")Menu menu){
+        Cnd c = new ParseObj(menu).getCnd();
+        List<Menu> list_m = menuService.query(c.asc("ordernum"), p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",menuService.count(c));
+        map.put("data",list_m);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public List<Tree> menuList(HttpServletRequest request){
+        Cnd c = Cnd.where("state","=",1);
+        List<Menu> list_m = menuService.query(c.asc("pname"), null);
+
+        List<Tree> list_tree = new LinkedList<Tree>();
+        for (Menu menu : list_m)
+        {
+            Tree tree = new Tree();
+            tree.setId(menu.getName());
+            tree.setText(menu.getCnname());
+            if (!menu.getPname().equals("0"))
+            {
+                tree.setPid(menu.getPname());
+            }
+            list_tree.add(tree);
+
+        }
+        System.out.println(JSON.toJSONString(list_m));
+        return list_tree;
     }
 
     @At

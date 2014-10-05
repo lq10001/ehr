@@ -1,5 +1,6 @@
 package com.ly.base.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
@@ -13,6 +14,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +35,41 @@ public class ProductteamAction {
 
     @At("/")
     @Ok("beetl:/WEB-INF/base/productteam_list.html")
-    public void index(@Param("..")Page p,
-                      @Param("..")Productteam productteam,
-                      HttpServletRequest request){
-        Cnd c = new ParseObj(productteam).getCnd();
-        List<Productteam> list_m = productteamService.query(c, p);
-        p.setRecordCount(productteamService.count(c));
-
-        request.setAttribute("list_obj", list_m);
-        request.setAttribute("page", p);
-        request.setAttribute("productteam", productteam);
-    }
-
-    @At
-    @Ok("beetl:/WEB-INF/base/productteam.html")
-    public void edit(@Param("id")Long id,
-                      HttpServletRequest request){
-        if(id == null || id == 0){
-            request.setAttribute("productteam", null);
-        }else{
-            request.setAttribute("productteam", productteamService.fetch(id));
-        }
+    public void index(){
     }
 
     @At
     @Ok("json")
-    public Map<String,String> save( @Param("..")Productteam productteam){
+    public Map productteamList(HttpServletRequest request,
+                         @Param("..")Page p,
+                         @Param("..")Productteam productteam){
+        List<Productteam> list_obj = productteamService.query(null, p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",productteamService.count());
+        map.put("data",list_obj);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public void save(@Param("data") String data ){
         Object rtnObject;
-        if (productteam.getId() == null || productteam.getId() == 0) {
-            rtnObject = productteamService.dao().insert(productteam);
-        }else{
-            rtnObject = productteamService.dao().updateIgnoreNull(productteam);
-        }
-        return Dwz.rtnMap((rtnObject == null) ? false : true, "productteam", "closeCurrent");
-    }
+        System.out.println(data);
+        String s1 = data.replace("_state","webstate");
+        List<Productteam> productteamList = JSON.parseArray(s1, Productteam.class);
 
-    @At
-    @Ok("json")
-    public Map<String,String> del(@Param("id")Long id)
-    {
-        int num =  productteamService.delete(id);
-        return Dwz.rtnMap((num > 0) ? true : false , "productteam", "");
+        for(Productteam productteam : productteamList)
+        {
+            if (productteam.getWebstate().equals("added")){
+                productteam.setId(null);
+                productteamService.dao().insert(productteam);
+            }else if(productteam.getWebstate().equals("modified")) {
+                productteamService.dao().updateIgnoreNull(productteam);
+            }else{
+                productteamService.delete(productteam.getId());
+            }
+        }
     }
 
 }

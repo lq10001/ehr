@@ -1,5 +1,6 @@
 package com.ly.base.action;
 
+import com.alibaba.fastjson.JSON;
 import com.ly.comm.Dwz;
 import com.ly.comm.Page;
 import com.ly.comm.ParseObj;
@@ -13,6 +14,7 @@ import org.nutz.mvc.annotation.*;
 import org.nutz.mvc.filter.CheckSession;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,47 +35,41 @@ public class GenderAction {
 
     @At("/")
     @Ok("beetl:/WEB-INF/base/gender_list.html")
-    public void index(@Param("..")Page p,
-                      @Param("..")Gender gender,
-                      HttpServletRequest request){
-        Cnd c = new ParseObj(gender).getCnd();
-        List<Gender> list_m = genderService.query(c, p);
-        p.setRecordCount(genderService.count(c));
-
-        request.setAttribute("list_obj", list_m);
-        request.setAttribute("page", p);
-        request.setAttribute("gender", gender);
-    }
-
-    @At
-    @Ok("beetl:/WEB-INF/base/gender.html")
-    public void edit(@Param("id")Long id,
-                      HttpServletRequest request){
-        if(id == null || id == 0){
-            request.setAttribute("gender", null);
-        }else{
-            request.setAttribute("gender", genderService.fetch(id));
-        }
+    public void index(){
     }
 
     @At
     @Ok("json")
-    public Map<String,String> save( @Param("..")Gender gender){
+    public Map genderList(HttpServletRequest request,
+                         @Param("..")Page p,
+                         @Param("..")Gender gender){
+        List<Gender> list_obj = genderService.query(null, p);
+
+        Map map = new LinkedHashMap();
+        map.put("total",genderService.count());
+        map.put("data",list_obj);
+        return map;
+    }
+
+    @At
+    @Ok("json")
+    public void save(@Param("data") String data ){
         Object rtnObject;
-        if (gender.getId() == null || gender.getId() == 0) {
-            rtnObject = genderService.dao().insert(gender);
-        }else{
-            rtnObject = genderService.dao().updateIgnoreNull(gender);
-        }
-        return Dwz.rtnMap((rtnObject == null) ? false : true, "gender", "closeCurrent");
-    }
+        System.out.println(data);
+        String s1 = data.replace("_state","webstate");
+        List<Gender> genderList = JSON.parseArray(s1, Gender.class);
 
-    @At
-    @Ok("json")
-    public Map<String,String> del(@Param("id")Long id)
-    {
-        int num =  genderService.delete(id);
-        return Dwz.rtnMap((num > 0) ? true : false , "gender", "");
+        for(Gender gender : genderList)
+        {
+            if (gender.getWebstate().equals("added")){
+                gender.setId(null);
+                genderService.dao().insert(gender);
+            }else if(gender.getWebstate().equals("modified")) {
+                genderService.dao().updateIgnoreNull(gender);
+            }else{
+                genderService.delete(gender.getId());
+            }
+        }
     }
 
 }

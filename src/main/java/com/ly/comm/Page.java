@@ -7,29 +7,17 @@ public class Page extends Pager {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 232222222222333L;	
-	
-	private int pageNum;
-	
-	private int numPerPage;
-	
-	
-	public int getPageNum() {
-		return super.getPageNumber();
-	}
+	private static final long serialVersionUID = 232222222222333L;
 
-	public void setPageNum(int pageNum) {
-		this.pageNum = pageNum;
-		super.setPageNumber(pageNum);
-	}
 
-	public int getNumPerPage() {
-		return super.getPageSize();
-	}
+	private int pageIndex;
 
-	public void setNumPerPage(int numPerPage) {
-		this.numPerPage = numPerPage;
-		super.setPageSize(numPerPage);
-	}
 
+    public int getPageIndex() {
+        return super.getPageNumber();
+    }
+
+    public void setPageIndex(int pageIndex) {
+        super.setPageNumber(pageIndex + 1);
+    }
 }
