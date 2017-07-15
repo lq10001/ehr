@@ -1,6 +1,9 @@
 # 人力资源管理系统
 
-产品预览图：
+##公众号：全栈程序员之路
+![输入图片说明](https://mp.weixin.qq.com/mp/qrcode?scene=10000004&size=102&__biz=MzIzMTE0NTE5Mg==&mid=2651421365&idx=1&sn=ec2b310f1888fca3560ba504af0077f5&send_time= "在这里输入图片标题")
+
+## 产品预览图：
 1 员工管理
 ![输入图片说明](https://git.oschina.net/uploads/images/2017/0715/212646_a45eb67c_3018.png "在这里输入图片标题")
 2 员工基本信息
